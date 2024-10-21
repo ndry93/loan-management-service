@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "aaron-bond.better-comments",
+        "christian-kohler.path-intellisense",
+        "dbaeumer.vscode-eslint",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "irongeek.vscode-env"
+    ]
+}

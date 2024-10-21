@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  title: Loan Management System API
+  version: 1.0.0
+  description: Loan Management System API
+servers:
+  - url: https://api.example.com/v1
+
+paths:
+  /api/v1/loans:
+    post:
+      summary: Create a new loan (Proposed State)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                borrower_id:
+                  type: string
+                  format: uuid
+                  example: 7097bbbb-1ffa-47aa-8cb4-ad01e9e73762
+                principal_amount:
+                  type: number
+                  format: double
+                  example: 10000.00
+                interest_rate:
+                  type: number
+                  format: double
+                  example: 5.0
+                roi:
+                  type: number
+                  format: double
+                  example: 10.0
+      responses:
+        201:
+          description: Loan created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /loans/{loan_id}/approve:
+    post:
+      summary: Approve a loan
+      parameters:
+        - name: loan_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 7097bbbb-1ffa-47aa-8cb4-ad01e9e73762
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                approval_date:
+                  type: string
+                  format: date-time
+                  example: "2024-01-01T10:00:00Z"
+                validator_picture_url:
+                  type: string
+                  example: "https://example.com/pictures/validator1.jpg"
+                validator_id:
+                  type: string
+                  format: uuid
+                  example: 7097bbbb-1ffa-47aa-8cb4-ad01e9e73762
+      responses:
+        200:
+          description: Loan approved
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+
+  /loans/{loan_id}/invest:
+    post:
+      summary: Add an investment to a loan
+      parameters:
+        - name: loan_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                investor_name:
+                  type: string
+                  example: "John Doe"
+                invested_amount:
+                  type: number
+                  format: double
+                  example: 5000.00
+      responses:
+        200:
+          description: Investment added successfully
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+
+  /loans/{loan_id}/disburse:
+    post:
+      summary: Disburse loan to borrower
+      parameters:
+        - name: loan_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                disbursement_date:
+                  type: string
+                  format: date-time
+                  example: "2024-01-02T15:30:00Z"
+                agreement_letter_signed_url:
+                  type: string
+                  example: "https://example.com/agreements/loan123.pdf"
+                field_officer_id:
+                  type: integer
+                  example: 2
+      responses:
+        200:
+          description: Loan disbursed successfully
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+
+components:
+  schemas:
+    Loan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 7097bbbb-1ffa-47aa-8cb4-ad01e9e73762
+        borrower_id:
+          type: string
+          format: uuid
+          example: 7097bbbb-1ffa-47aa-8cb4-ad01e9e73762
+        principal:
+          type: number
+          format: double
+        rate:
+          type: number
+          format: double
+        roi:
+          type: number
+          format: double
+        agreement_letter_link:
+          type: string
+        state:
+          type: string
+          enum: [proposed, approved, invested, disbursed]
+        created_at:
+          type: string
+          format: date-time
