@@ -22,11 +22,12 @@ type CreateAppType = {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function setupRoutes(app: Application, initOptions: any) {
-    const { loanController } = initOptions;
+    const { loanController, healthcheckController } = initOptions;
 
     // v1 endpoints
     const v1 = '/api/v1';
     app.use(`${v1}/loans`, loanController.getRouter());
+    app.use(`/healthcheck`, healthcheckController.getRouter());
 }
 
 /**

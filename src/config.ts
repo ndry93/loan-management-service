@@ -19,7 +19,7 @@ export const IS_LOCAL_APPENV = APP_ENV === 'local';
 // Envvars for default database connection
 export const PGDATABASE = process.env.PGDATABASE || 'test';
 export const PGHOST = process.env.PGHOST || 'localhost';
-export const PGPORT = Number(process.env.PGPORT) || 54320;
+export const PGPORT = Number(process.env.PGPORT) || 54321;
 export const PGUSER = process.env.PGUSER || 'test';
 export const PGPASSWORD = process.env.PGPASSWORD || 'test';
 

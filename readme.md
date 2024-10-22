@@ -2,6 +2,8 @@
 
 An example of loan management system
 
+
+
 # Tables
 - borrower: Stores borrower information.
 - employee: Stores employee information.
@@ -11,3 +13,9 @@ An example of loan management system
 - disbursement_detail: Details related to loan disbursement.
 
 ![Entity Relational Diagram](./erd.png)
+
+
+# How to Run
+```
+docker-compose up -d
+```

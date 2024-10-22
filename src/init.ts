@@ -9,6 +9,8 @@ import { ApprovalDetail, Loan, LoanInvestment } from './models';
 import { Borrower } from './models/borrower.entity';
 import { DisbursementDetail } from './models/disbursement-detail.entity';
 import { BorrowerService } from './services/borrower.service';
+import { HealthcheckController } from './controllers/healthcheck.controller';
+import { HealthcheckService } from './services/healthcheck.service';
 
 /**
  * Initialize all ENV values and dependencies here so that they are re-usable across web servers, queue runners and crons
@@ -36,14 +38,17 @@ export async function init() {
         disbursementDetailRepository,
         approvalDetailRepository
     );
+    const healthcheckService = new HealthcheckService(dataSource);
 
     // controllers
     const loanController = new LoanController(loanService);
+    const healthcheckController = new HealthcheckController(healthcheckService);
 
     return {
         dataSource,
 
         loanService,
-        loanController
+        loanController,
+        healthcheckController
     };
 }

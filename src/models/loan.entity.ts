@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
-import { Entity, Column, JoinColumn, ManyToOne, OneToMany, OneToOne, Relation } from 'typeorm';
-import { LoanStatusEnum } from '@src/enums';
+import { Entity, Column, JoinColumn, ManyToOne, OneToMany, OneToOne, Relation, Index } from 'typeorm';
+import { LoanStatusEnum } from 'src/enums';
 import { CustomBaseEntity } from './base/auditable';
 import { Borrower } from './borrower.entity';
 import { LoanInvestment } from './loan-investment.entity';
@@ -8,6 +8,8 @@ import { DisbursementDetail } from './disbursement-detail.entity';
 import { ApprovalDetail } from './approval-detail.entity';
 
 @Entity()
+@Index(['borrower_id'])
+@Index(['disbursement_detail_id'])
 export class Loan extends CustomBaseEntity {
     @Column()
     borrower_id: string;
@@ -37,7 +39,7 @@ export class Loan extends CustomBaseEntity {
     @Column('decimal', { precision: 15, scale: 2 })
     interest_amount: number;
 
-    @Column('decimal', { precision: 15, scale: 2 })
+    @Column('decimal', { precision: 15, scale: 2, nullable: true })
     total_investment_amount?: number;
 
     @OneToMany(() => LoanInvestment, (loanInvestment) => loanInvestment.loan)

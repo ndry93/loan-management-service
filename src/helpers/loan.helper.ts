@@ -2,7 +2,7 @@ export const calculateLoanROI = (principalAmount: number = 0, interestAmount: nu
     if (principalAmount === 0 || interestAmount === 0) {
         return 0;
     }
-    return principalAmount / interestAmount;
+    return interestAmount / principalAmount;
 };
 
 export const calculateInterestAmount = (principalAmount: number = 0, interestRate: number = 0) => {

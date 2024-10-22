@@ -1,10 +1,11 @@
 /* eslint-disable import/no-cycle */
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { CustomBaseEntity } from './base/auditable';
 import { Loan } from './loan.entity';
 import { Employee } from './employee.entity';
 
 @Entity()
+@Index(['loan_id'])
 export class ApprovalDetail extends CustomBaseEntity {
     @Column()
     loan_id: string;

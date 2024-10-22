@@ -1,6 +1,6 @@
-import { ApprovalDetail, Borrower, LoanInvestment } from '@src/models';
-import { DisbursementDetail } from '@src/models/disbursement-detail.entity';
-import { Loan } from '@src/models/loan.entity';
+import { ApprovalDetail, Borrower, LoanInvestment } from 'src/models';
+import { DisbursementDetail } from 'src/models/disbursement-detail.entity';
+import { Loan } from 'src/models/loan.entity';
 import { Transactional } from 'typeorm-transactional';
 import { Repository } from 'typeorm/repository/Repository';
 import {
@@ -8,11 +8,14 @@ import {
     ApproveLoanResponse,
     CreateLoanRequest,
     CreateLoanResponse
-} from '@src/interfaces/loan.interface';
-import { calculateInterestAmount, calculateLoanROI } from '@src/helpers/loan.helper';
-import { validateUrl } from '@src/utils';
-import { logger } from '@src/libs/logger';
-import { LoanStatusEnum } from '@src/enums';
+} from 'src/interfaces/loan.interface';
+import { calculateInterestAmount, calculateLoanROI } from 'src/helpers/loan.helper';
+import { validateUrl } from 'src/utils';
+import { logger } from 'src/libs/logger';
+import { LoanStatusEnum } from 'src/enums';
+import { StandardError } from 'src/standard-error';
+import { ErrorCodes } from 'src/errors';
+import _ from 'lodash';
 import { BorrowerService } from './borrower.service';
 
 export class LoanService {
@@ -47,12 +50,14 @@ export class LoanService {
         try {
             const borrower: Borrower = await this.borrowerService.getBorrower(createLoanRequest.borrower_id);
             if (!borrower) {
-                throw new Error('Borrower not found');
+                throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Borrower not found');
             }
 
-            const agreementLetterLink = validateUrl(createLoanRequest.agreement_letter_link);
-            if (!agreementLetterLink) {
-                throw new Error('Invalid agreement letter link');
+            if (!_.isEmpty(createLoanRequest.agreement_letter_link)) {
+                const agreementLetterLink = validateUrl(createLoanRequest.agreement_letter_link);
+                if (!agreementLetterLink) {
+                    throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Invalid agreement letter link');
+                }
             }
 
             const loan = new Loan();
@@ -93,14 +98,17 @@ export class LoanService {
     public async approveLoan(loanId: string, approveLoanRequest: ApproveLoanRequest): Promise<ApproveLoanResponse> {
         try {
             if (!loanId) {
-                throw new Error('Loan id is required');
+                throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Loan id is required');
             }
             if (!approveLoanRequest) {
-                throw new Error('Approve loan request is required');
+                throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Approve loan request is required');
             }
-            const agreementLetterLink = validateUrl(approveLoanRequest.validator_picture_url);
-            if (!agreementLetterLink) {
-                throw new Error('Invalid agreement letter link');
+
+            if (!_.isEmpty(approveLoanRequest.validator_picture_url)) {
+                const agreementLetterLink = validateUrl(approveLoanRequest.validator_picture_url);
+                if (!agreementLetterLink) {
+                    throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Invalid agreement letter link');
+                }
             }
 
             // find loan by id with pessimistic write lock
@@ -113,12 +121,15 @@ export class LoanService {
                 }
             });
             if (!loan) {
-                throw new Error('Loan is not found');
+                throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Loan is not found');
             }
 
             const approvalDetail = new ApprovalDetail();
             approvalDetail.employee_id = approveLoanRequest.employee_id;
             approvalDetail.validator_picture_url = approveLoanRequest.validator_picture_url;
+            approvalDetail.approval_date = new Date();
+            approvalDetail.loan_id = loanId;
+
             const savedApprovalDetail = await this.approvalDetailRepository.save(approvalDetail);
             const approvalLoanResponse: ApproveLoanResponse = {
                 id: savedApprovalDetail.id,

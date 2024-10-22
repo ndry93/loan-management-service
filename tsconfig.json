@@ -13,8 +13,6 @@
         "outDir": "./dist/",
         "baseUrl": ".",
         "paths": {
-            "@src/*": ["src/*"],
-            "@libs/*": ["src/libs/*"],
             "src/*": ["./src/*"],
             "*": ["node_modules/*", "vendor/*"]
         },

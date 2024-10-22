@@ -1,5 +1,5 @@
-import { CreateBorrowerRequest } from '@src/interfaces/borrower.interface';
-import { Borrower } from '@src/models/borrower.entity';
+import { CreateBorrowerRequest } from 'src/interfaces/borrower.interface';
+import { Borrower } from 'src/models/borrower.entity';
 import { Repository } from 'typeorm/repository/Repository';
 
 export class BorrowerService {
