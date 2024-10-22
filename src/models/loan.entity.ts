@@ -1,9 +1,11 @@
 /* eslint-disable import/no-cycle */
 import { Entity, Column, JoinColumn, ManyToOne, OneToMany, OneToOne, Relation } from 'typeorm';
+import { LoanStatusEnum } from '@src/enums';
 import { CustomBaseEntity } from './base/auditable';
 import { Borrower } from './borrower.entity';
 import { LoanInvestment } from './loan-investment.entity';
 import { DisbursementDetail } from './disbursement-detail.entity';
+import { ApprovalDetail } from './approval-detail.entity';
 
 @Entity()
 export class Loan extends CustomBaseEntity {
@@ -17,17 +19,26 @@ export class Loan extends CustomBaseEntity {
     @JoinColumn({ name: 'borrower_id', referencedColumnName: 'id' })
     borrower: Borrower;
 
-    @Column({ nullable: true })
-    interest_rate: string;
+    @Column('decimal', { precision: 5, scale: 2 })
+    interest_rate: number;
+
+    @Column('decimal', { precision: 15, scale: 2 })
+    principal_amount: number;
+
+    @Column('decimal', { precision: 5, scale: 2 })
+    roi: number;
 
     @Column()
-    principal_amount: string;
+    agreement_letter_link: string;
 
-    @Column()
-    expected_roi: string;
+    @Column('enum', { enum: LoanStatusEnum, default: LoanStatusEnum.PROPOSED })
+    status: LoanStatusEnum;
 
-    @Column()
-    status: string;
+    @Column('decimal', { precision: 15, scale: 2 })
+    interest_amount: number;
+
+    @Column('decimal', { precision: 15, scale: 2 })
+    total_investment_amount?: number;
 
     @OneToMany(() => LoanInvestment, (loanInvestment) => loanInvestment.loan)
     investments?: LoanInvestment[];
@@ -41,4 +52,7 @@ export class Loan extends CustomBaseEntity {
     })
     @JoinColumn({ name: 'disbursement_detail_id' })
     disbursementDetail?: Relation<DisbursementDetail>;
+
+    @OneToMany(() => ApprovalDetail, (approvalDetail) => approvalDetail.loan)
+    approvalDetails?: ApprovalDetail[];
 }

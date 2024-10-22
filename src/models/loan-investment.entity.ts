@@ -1,4 +1,5 @@
-import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
+/* eslint-disable import/no-cycle */
+import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { CustomBaseEntity } from './base/auditable';
 import { Loan } from './loan.entity';
 
@@ -12,5 +13,14 @@ export class LoanInvestment extends CustomBaseEntity {
         onUpdate: 'CASCADE'
     })
     @JoinColumn({ name: 'loan_id' })
-    loan: Loan;
+    loan?: Loan;
+
+    @CreateDateColumn({ type: 'timestamptz' })
+    investment_date: Date;
+
+    @Column()
+    investor_name: string;
+
+    @Column('decimal', { precision: 15, scale: 2 })
+    invested_amount: number;
 }

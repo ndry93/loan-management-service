@@ -38,10 +38,6 @@ function connectionGuard(dataSource: DataSource) {
     }
 }
 
-// 1. Wait for db to come online and connect
-// 2. On connection instability, able to reconnect
-// 3. The app should never die due to connection issue
-// 3.a. We rethrow the connection error in test mode to prevent open handles issue in Jest
 export async function connect(): Promise<DataSource> {
     let dataSource: DataSource | undefined;
 

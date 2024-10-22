@@ -17,7 +17,7 @@ export abstract class CustomBaseEntity {
     }
 
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id?: string;
 
     @CreateDateColumn({ type: 'timestamptz' })
     created_at?: Date;

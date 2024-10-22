@@ -13,8 +13,10 @@
         "outDir": "./dist/",
         "baseUrl": ".",
         "paths": {
-            "*": ["node_modules/*", "vendor/*"],
-            "src/*": ["./src/*"]
+            "@src/*": ["src/*"],
+            "@libs/*": ["src/libs/*"],
+            "src/*": ["./src/*"],
+            "*": ["node_modules/*", "vendor/*"]
         },
         "skipLibCheck": true,
         "sourceMap": true,

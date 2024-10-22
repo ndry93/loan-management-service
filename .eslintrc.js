@@ -9,6 +9,17 @@ module.exports = {
       'plugin:@typescript-eslint/recommended',
       'plugin:prettier/recommended' // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@src', './src'],
+          ['@libs', './src/libs'],
+        ],
+        extensions: ['.ts', '.js', '.jsx', '.json'],
+      },
+    },
+  },
   plugins: ['filenames'],
   parserOptions: {
       project: './tsconfig.json',
@@ -32,7 +43,8 @@ module.exports = {
       '@typescript-eslint/no-throw-literal': 'warn',
       '@typescript-eslint/return-await': 'warn',
       'arrow-body-style': 'off',
-      '@typescript-eslint/no-empty-interface': 'warn'
+      '@typescript-eslint/no-empty-interface': 'warn',
+      'import/no-extraneous-dependencies': ['warn', { devDependencies: ['**/*.test.ts', '**/*.spec.ts'] }]
   },
   env: {
       'jest/globals': true
